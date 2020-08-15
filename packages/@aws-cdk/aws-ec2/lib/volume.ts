@@ -675,9 +675,13 @@ export class Volume extends VolumeBase {
       sizeRanges[EbsDeviceVolumeType.MAGNETIC] = { Min: 1, Max: 1000 };
       const volumeType = props.volumeType ?? EbsDeviceVolumeType.GENERAL_PURPOSE_SSD;
       const { Min, Max } = sizeRanges[volumeType];
-      if (size < Min || size > Max) {
-        throw new Error(`\`${volumeType}\` volumes must be between ${Min} GiB and ${Max} GiB in size.`);
+      
+      if (!Token.isUnresolved(size)) {
+        if (size < Min || size > Max) {
+          throw new Error(`\`${volumeType}\` volumes must be between ${Min} GiB and ${Max} GiB in size.`);
+        }
       }
+
     }
   }
 }
